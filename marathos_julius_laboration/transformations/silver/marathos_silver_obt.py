@@ -141,7 +141,7 @@ def cleaned_marathos():
                 "athlete_id",
                 sha2(concat_ws("||",
                     col("athlete_country"),
-                    col("athlete_year_of_birth"),
+                    col("athlete_year_of_birth").cast("string"),
                     col("athlete_gender"),
                     col("athlete_age_category")
                     ), 256)
