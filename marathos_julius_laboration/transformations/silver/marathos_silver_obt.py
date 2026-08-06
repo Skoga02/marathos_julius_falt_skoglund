@@ -164,6 +164,12 @@ def cleaned_marathos():
             .filter(col("athlete_average_speed").between(0.5, 25))
             # Drop rows with null perforamnce
             .filter(col("athlete_performance").isNotNull())
+
+            .drop(
+                "performance_seconds",
+                "performance_km",
+                "event_hours",
+            )
     )
 
     # # Drop nulls for performance, date, event_type and average_speed otherwise the analysis will fail
@@ -172,6 +178,8 @@ def cleaned_marathos():
     "event_date",
     "event_type",
     "athlete_average_speed",
+
 ])
+    
     
     return df_cleaned
