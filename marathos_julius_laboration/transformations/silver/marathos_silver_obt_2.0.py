@@ -268,6 +268,15 @@ def cleaned_marathos():
         ]
     )
 
+    # ___ Remove duplicate results ___
+    df_cleaned = df_cleaned.dropDuplicates(
+        [
+            "event_id",
+            "athlete_id",
+            "athlete_performance",
+        ]
+    )
+
     # ___ Remove intermediate helper columns ___
     df_cleaned = df_cleaned.drop(
         "performance_seconds",
