@@ -254,6 +254,8 @@ def cleaned_marathos():
         .filter(col("athlete_average_speed").between(0.5, 20))
         # Remove missing performances
         .filter(col("athlete_performance").isNotNull())
+        # Remove records with invalid countries
+        .filter(col("athlete_country") != "XXX")
     )
 
     # ___ Remove rows required for downstream analysis ___
