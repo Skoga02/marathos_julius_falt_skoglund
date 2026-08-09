@@ -11,6 +11,8 @@ from pyspark.sql.functions import (
     expr,
     upper,
     round as spark_round,
+    coalesce,
+    lit,
 )
 
 # ___ Regex patterns ___
@@ -200,6 +202,12 @@ def cleaned_marathos():
         ),
     )
 
+    # ___ Normalize age category prefix (W -> F, to match gender coding) ___
+    df_cleaned = df_cleaned.withColumn(
+        "athlete_age_category",
+        regexp_replace(col("athlete_age_category"), "^W", "F")
+    )
+
     # ___ Generate surrogate keys ___
     # SHA-256 is deterministic and works with streaming tables.
     # The same input always produces the same identifier,regardless of processing order.
@@ -256,6 +264,15 @@ def cleaned_marathos():
         .filter(col("athlete_performance").isNotNull())
         # Remove records with invalid countries
         .filter(col("athlete_country") != "XXX")
+        # ___ Remove rows where age category prefix with athlete_gender, found during gold EDA ___
+        .filter(
+            ~coalesce(
+                (col("athlete_age_category").startswith("F") & (col("athlete_gender") == "M"))
+                | (col("athlete_age_category").startswith("M") & (col("athlete_gender") == "F")),
+                lit(False)
+            )
+        )
+
     )
 
     # ___ Remove rows required for downstream analysis ___
