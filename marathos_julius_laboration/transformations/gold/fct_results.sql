@@ -1,5 +1,5 @@
 CREATE OR REFRESH MATERIALIZED VIEW marathos.gold.fct_results
-  COMMENT "Fact table with one row per race result" AS
+  COMMENT "Fact table - gold layer" AS
 SELECT
   result_id,
   event_id,
